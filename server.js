@@ -49,10 +49,15 @@ function loadDB() {
   client.query(`
     CREATE TABLE IF NOT EXISTS
 <<<<<<< HEAD
+<<<<<<< HEAD
     tasks(id serial primary key, title varchar(255), description varchar(255), contact varchar(255), status varchar(255), category varchar(255), due varchar(255));
     `);
 =======
     books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description varchar(255));
     `)
 >>>>>>> master
+=======
+    books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description varchar(255));
+    `)
+>>>>>>> 0ee52a99070b0d0976d8757192166b7c8974c2a1
 }
