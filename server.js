@@ -3,15 +3,12 @@
 const pg = require('pg');
 const fs = require('fs');
 const express = require('express');
+const app = express();
+const cors = require('cors');
+
 // const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3000;
-// const app = express();
 const conString = 'postgres://localhost:5432';
-// const client = new pg.Client(conString);
-// client.connect();
-// client.on('error', err => {
-//   console.error(err);
-// });
 
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
@@ -37,8 +34,8 @@ app.use(cors());
 
 app.get('/', (req, res) => res.send('Testing 1, 2, 3'));
 
-app.get('/tasks', (req, res) => {
-  client.query(`SELECT * from tasks;`)
+app.get('/books', (req, res) => {
+  client.query(`SELECT * from books;`)
     .then(results => res.send(results.rows))
     .catch(console.error);
 });
