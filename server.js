@@ -25,7 +25,8 @@ const conString = 'postgres://localhost:5432';
 //       queryTwo()
 //     }
 //   )
-
+//
+// const DATABASE_URL = postgres://dkptmftjrwbghc:eff31dc8880e0b34a9c151e133a77fac09137189e6be52af0bdb2c7151d99903@ec2-50-16-202-213.compute-1.amazonaws.com:5432/d4r0f3cgjqknfj
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
@@ -47,6 +48,11 @@ app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 function loadDB() {
   client.query(`
     CREATE TABLE IF NOT EXISTS
+<<<<<<< HEAD
     tasks(id serial primary key, title varchar(255), description varchar(255), contact varchar(255), status varchar(255), category varchar(255), due varchar(255));
     `);
+=======
+    books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description varchar(255));
+    `)
+>>>>>>> master
 }
