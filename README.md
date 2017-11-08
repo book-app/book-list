@@ -26,7 +26,7 @@ We'd like to thank Ron Dunphy for his excellent explanation of the link between 
 
 
 # Dependencies
-This app includes dependances on node_js, postgres, filesystem, express, and body-parser.
+This app includes dependancies on node_js, postgres, filesystem, express, and body-parser.
 
 # Other notes:
 postgres://dkptmftjrwbghc:eff31dc8880e0b34a9c151e133a77fac09137189e6be52af0bdb2c7151d99903@ec2-50-16-202-213.compute-1.amazonaws.com:5432/d4r0f3cgjqknfj
