@@ -3,11 +3,12 @@
 const pg = require('pg');
 const fs = require('fs');
 const express = require('express');
-const app = express();
 const cors = require('cors');
 
 // const bodyParser = require('body-parser');
+const app = express();
 const PORT = process.env.PORT || 3000;
+const CLIENT_URL = process.env.CLIENT_URL; ///added during code review
 const conString = 'postgres://localhost:5432';
 
 // app.use(bodyParser.json());
@@ -36,28 +37,43 @@ app.use(cors());
 app.get('/', (req, res) => res.send('Testing 1, 2, 3'));
 
 app.get('/books', (req, res) => {
-  client.query(`SELECT * from books;`)
+  client.query(`SELECT book_id, title, author, image_url, isbn FROM books;`)
     .then(results => res.send(results.rows))
     .catch(console.error);
 });
 
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
+loadDB();
+
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
-function loadDB() {
+
+function loadBooks () {
+  client.query('SELECT COUNT(*) FROM articles')
+    .then(result => {
+      if (!parseInt(result.rows[0].count)) {
+        fs.readFile('data/books.json', (err, file) => {
+          JSON.parse(file.toString()).forEach(book => {
+            client.query(`
+              INSERT INTO
+                books(author, title, isbn, image_url, description)
+                  VALUES($1, $2, $3, $4, $5);
+                  `,
+              [book.author, book.title, book.isbn, book.image_url, book.description]
+            )
+              .catch(console.err);
+          });
+        });
+      }
+    });
+}
+
+function loadDB () {
   client.query(`
     CREATE TABLE IF NOT EXISTS
-<<<<<<< HEAD
-<<<<<<< HEAD
-    tasks(id serial primary key, title varchar(255), description varchar(255), contact varchar(255), status varchar(255), category varchar(255), due varchar(255));
-    `);
-=======
-    books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description varchar(255));
+    books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description TEXT);
     `)
->>>>>>> master
-=======
-    books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description varchar(255));
-    `)
->>>>>>> 0ee52a99070b0d0976d8757192166b7c8974c2a1
+    .then(data => loadBooks(data))
+    .catch(err => console.log(err));
 }
