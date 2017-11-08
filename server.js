@@ -53,8 +53,8 @@ function loadBooks () {
   client.query('SELECT COUNT(*) FROM articles')
     .then(result => {
       if (!parseInt(result.rows[0].count)) {
-        fs.readFile('data/books.json', (err, file) => {
-          JSON.parse(file.toString()).forEach(book => {
+        fs.readFile('./data/books.json', (err, fd) => {
+          JSON.parse(fd.toString()).forEach(book => {
             client.query(`
               INSERT INTO
                 books(author, title, isbn, image_url, description)
@@ -72,8 +72,10 @@ function loadBooks () {
 function loadDB () {
   client.query(`
     CREATE TABLE IF NOT EXISTS
-    books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description TEXT);
+    books(id SERIAL PRIMARY KEY, author VARCHAR(255), title VARCHAR(255), isbn VARCHAR(255), image_url VARCHAR(255), description TEXT);
     `)
-    .then(data => loadBooks(data))
+    .then(() => {
+      loadBooks();
+    })
     .catch(err => console.log(err));
 }
