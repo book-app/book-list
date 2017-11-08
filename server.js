@@ -1,23 +1,28 @@
 'use strict';
 
-//application dependancies
-const express = require('express');
-const cors = require('cors');
+// application dependancies
 const pg = require('pg');
+const fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 
-//application setup
+// application setup
 const app = express();
 const PORT = process.env.PORT || 3000;
 const CLIENT_URL = process.env.CLIENT_URL;
 
-//database setup
+// database setup
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
 
-//application middleware
+// application middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
+app.use(express.static('./'));
 
 
 app.get('/test', (req, res) => res.send('Testing 1, 2, 3'));
@@ -29,16 +34,17 @@ app.get('/api/vi/books', (req, res) => {
 });
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
-loadDB();
+
 
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
-function loadBooks () {
-  client.query('SELECT COUNT(*) FROM articles')
+function loadBooks() {
+  client.query('SELECT COUNT(*) FROM books')
     .then(result => {
       if (!parseInt(result.rows[0].count)) {
-        fs.readFile('./data/books.json', (err, fd) => {
+        fs.readFile('data/books.json', (err, fd) => {
+          console.log(fd, '************');
           JSON.parse(fd.toString()).forEach(book => {
             client.query(`
               INSERT INTO
@@ -57,14 +63,12 @@ function loadBooks () {
 function loadDB () {
   client.query(`
     CREATE TABLE IF NOT EXISTS
-    books(id SERIAL PRIMARY KEY, author VARCHAR(255), title VARCHAR(255), isbn VARCHAR(255), image_url VARCHAR(255), description TEXT);
+    books(book_id SERIAL PRIMARY KEY, author VARCHAR(255), title VARCHAR(255), isbn VARCHAR(255), image_url VARCHAR(255), description TEXT);
     `)
     .then(() => {
       loadBooks();
     })
     .catch(err => console.log(err));
-
 }
 
-
-
+loadDB();
