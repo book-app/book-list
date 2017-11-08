@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const pg = require('pg');
 
+
 //application setup
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,29 +19,51 @@ client.on('error', err => console.error(err));
 //application middleware
 app.use(cors());
 
-//api endpoints
-app.get('/api/vi/books', (req, res) => {
-  client.query(`SELECT book_id, title, author, image_url, isbn FROM books;`)
-  .then(results => res.send(results.rows))
-  .catch(console.error);
-});
-app.get('*', (req, res) => res.redirect(CLIENT_URL));
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
-
-
-
-// const conString = 'postgres://localhost:5432';
 
 app.get('/test', (req, res) => res.send('Testing 1, 2, 3'));
 
+app.get('/api/vi/books', (req, res) => {
+  client.query(`SELECT book_id, title, author, image_url, isbn FROM books;`)
+    .then(results => res.send(results.rows))
+    .catch(console.error);
+});
+app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
-JSON.parse()
+loadDB();
 
-function loadDB() {
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+
+
+function loadBooks () {
+  client.query('SELECT COUNT(*) FROM articles')
+    .then(result => {
+      if (!parseInt(result.rows[0].count)) {
+        fs.readFile('./data/books.json', (err, fd) => {
+          JSON.parse(fd.toString()).forEach(book => {
+            client.query(`
+              INSERT INTO
+                books(author, title, isbn, image_url, description)
+                  VALUES($1, $2, $3, $4, $5);
+                  `,
+              [book.author, book.title, book.isbn, book.image_url, book.description]
+            )
+              .catch(console.err);
+          });
+        });
+      }
+    });
+}
+
+function loadDB () {
   client.query(`
     CREATE TABLE IF NOT EXISTS
-    books(id serial primary key, author varchar(255), title varchar(255), isbn varchar(255), image_url varchar(255), description varchar(255));
+    books(id SERIAL PRIMARY KEY, author VARCHAR(255), title VARCHAR(255), isbn VARCHAR(255), image_url VARCHAR(255), description TEXT);
     `)
+    .then(() => {
+      loadBooks();
+    })
+    .catch(err => console.log(err));
+
 }
 
 
