@@ -43,7 +43,7 @@ function loadBooks() {
   client.query('SELECT COUNT(*) FROM books')
     .then(result => {
       if (!parseInt(result.rows[0].count)) {
-        fs.readFile('data/books.json', (err, fd) => {
+        fs.readFile('./data/books.json', (err, fd) => {
           console.log(fd, '************');
           JSON.parse(fd.toString()).forEach(book => {
             client.query(`
