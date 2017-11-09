@@ -2,10 +2,10 @@
 Code Fellows 301 - week 3 project
 
 **Authors**: Will Reid & Jeff Martinez
-**Version**: 1.0.1
+**Version**: 1.0.2
 
 ## Overview
-Our goal with this project was to build a mobile-only site to organize a list of books.  The books themselves will be stored in a table (eventually in multiple tables after we normalize the data) in a postgresql instance.  In time we will make the site appropriately elegant.
+Our goal with this project was to build a mobile-only site to organize a list of books.  The books themselves will be stored in a table (eventually in multiple tables after we normalize the data) in a postgresql instance.  
 
 ## Getting Started
 To build this app on your own machine, clone this repo and launch the html page in your browser. You will need to install node, express, filesystem, and bodyParser using npm install -save <library>.  To be able to push and pull, you'll need to become a colaborator on the organization at https://github.com/book-app and the pipeline at https://dashboard.heroku.com/apps/book-app-cf301.
@@ -20,9 +20,14 @@ We are using a SMACSS organization of our CSS. The index.html file reveals the b
 11-08-2017 10am -- update server.js file
 11-08-2017 11:30am -- build out book-view and error-view filesystem
 11-08-2017 1:30pm -- troubleshoot global variables
+11-09-2017 10am -- updated server get route
+11-08-2017 11:30am -- updated bookView methods to display books on screen
+11-08-2017 12:30pm -- add get routes for :id and post route for /new
+11-08-2017 1:00pm -- troubleshoot global variables
+
 
 ## Credits and Collaborations
-We'd like to thank Ron Dunphy for his excellent explanation of the link between the client side and server side.
+We'd like to thank Ron Dunphy for his excellent explanation of the link between the client side and server side.  We'd also like to thank JB Tellez for his insights on the local/remote environment connections.
 
 
 # Dependencies
