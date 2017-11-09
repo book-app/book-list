@@ -4,7 +4,7 @@
 const pg = require('pg');
 const fs = require('fs');
 const express = require('express');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser').urlencoded({extended: true});
 const cors = require('cors');
 
 
@@ -21,10 +21,8 @@ client.connect();
 client.on('error', err => console.error(err));
 
 // application middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
-app.use(express.static('./'));
+
 
 
 app.get('/test', (req, res) => res.send('Testing 1, 2, 3'));
@@ -51,6 +49,7 @@ app.get('/api/v1/books/:id', (req, res) => {
 app.post('/api/v1/books', bodyParser, (req, res) => {
   console.log('hello');
   let {author, title, isbn, image_url, description} = req.body; // destructuring your object
+  console.log(req.body);
   client.query(`INSERT INTO books(author, title, isbn, image_url, description) VALUES($1, $2, $3, $4, $5)`,
   [author, title, isbn, image_url, description]
 )
