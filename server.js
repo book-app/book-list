@@ -39,7 +39,7 @@ app.get('/api/v1/books', (req, res) => {
 });
 
 app.get('/api/v1/books/:id', (req, res) => {
-  client.query(`SELECT book_id, title, author, image_url, isbn FROM books WHERE book_id=${req.params.id};`)
+  client.query(`SELECT book_id, title, author, image_url, isbn, description FROM books WHERE book_id=${req.params.id};`)
     .then(results => {
     res.send(results.rows)
     })
@@ -56,8 +56,20 @@ app.post('/api/v1/books', bodyParser, (req, res) => {
     .then(results => res.sendStatus(201))
     .catch(console.error);
 });
+//watch this space
+app.put('/api/v1/books/:id', (req, res) => {
+  console.log('hello');
+  let {author, title, isbn, image_url, description} = req.body; // destructuring your object
+  console.log(req.body);
+  client.query(`UPDATE books SET author = $1, title = $2, isbn = $3, image_url = $4, description = $5)`,
+  [author, title, isbn, image_url, description]
+)
+    .then(results => res.sendStatus(201))
+    .catch(console.error);
+});
+//
 
-app.get('*', (req, res) => res.redirect(CLIENT_URL));
+app.get('/*', (req, res) => res.redirect(CLIENT_URL)); // adding slash
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
