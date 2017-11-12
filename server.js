@@ -23,9 +23,12 @@ client.on('error', err => console.error(err));
 // application middleware
 app.use(cors());
 
-
-
 app.get('/test', (req, res) => res.send('Testing 1, 2, 3'));
+
+app.get('/api/v1/admin', (req, res) => {
+  console.log('client token:', req.query.token, 'server token', TOKEN);
+  res.send(TOKEN === parseInt(req.query.token))
+ });
 
 app.get('/api/v1/books', (req, res) => {
   // res.send('hi');
@@ -68,8 +71,10 @@ app.put('/api/v1/books/:id', (req, res) => {
     .catch(console.error);
 });
 //
+// app.delete('api/v1/books/:id', (req, res) => ... )
 
-app.get('/*', (req, res) => res.redirect(CLIENT_URL)); // adding slash
+app.get('*', (req, res) => res.redirect(CLIENT_URL)); // URL is gh-pages/book-list-client
+
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 
 
