@@ -52,7 +52,7 @@ app.post('/api/v1/books', bodyParser, (req, res) => {
   client.query(`INSERT INTO books(author, title, isbn, image_url, description) VALUES($1, $2, $3, $4, $5)`,
   [author, title, isbn, image_url, description]
 )
-    .then(results => res.sendStatus(201))
+    .then(results => res.sendStatus(201)
     .catch(console.error);
 });
 //watch this space
